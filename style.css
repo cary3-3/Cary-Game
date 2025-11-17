@@ -640,3 +640,19 @@ body {
     transform: translateX(10px);
     border-color: var(--accent-blue);
 }
+.glass-reel.spinning {
+    animation: reelSpin 0.1s infinite;
+}
+
+@keyframes reelSpin {
+    0% { transform: translateY(-5px) rotateX(0deg); opacity: 0.7; }
+    50% { transform: translateY(0px) rotateX(180deg); opacity: 1; }
+    100% { transform: translateY(5px) rotateX(360deg); opacity: 0.7; }
+}
+
+@keyframes glassShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-8px); }
+}
