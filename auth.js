@@ -1,3 +1,4 @@
+// Функция входа
 function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -10,13 +11,14 @@ function login() {
     const user = db.loginUser(username, password);
     
     if (user) {
-        alert('Вход успешен!');
+        alert('✅ Вход успешен!');
         window.location.href = 'index.html';
     } else {
-        alert('Неверное имя пользователя или пароль');
+        alert('❌ Неверное имя пользователя или пароль');
     }
 }
 
+// Функция регистрации
 function register() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -32,26 +34,30 @@ function register() {
         return;
     }
     
-    if (db.users.find(u => u.username === username)) {
-        alert('Пользователь с таким именем уже существует');
-        return;
+    try {
+        const user = db.registerUser(username, password);
+        alert('✅ Регистрация успешна! Теперь войдите в систему.');
+        window.location.href = 'login.html';
+    } catch (error) {
+        alert('❌ ' + error.message);
     }
-    
-    const user = db.registerUser(username, password);
-    alert('Регистрация успешна! Теперь войдите в систему.');
-    window.location.href = 'login.html';
 }
 
 // Обработчики для страниц входа и регистрации
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Auth system initialized');
+    
     if (window.location.pathname.includes('login.html')) {
-        const loginBtn = document.querySelector('.login-btn');
+        const loginBtn = document.querySelector('.glass-auth-btn');
         if (loginBtn) {
+            console.log('Login button found');
             loginBtn.addEventListener('click', login);
+        } else {
+            console.log('Login button NOT found');
         }
         
         // Enter для входа
-        const inputs = document.querySelectorAll('input');
+        const inputs = document.querySelectorAll('.glass-input');
         inputs.forEach(input => {
             input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
@@ -62,13 +68,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (window.location.pathname.includes('register.html')) {
-        const registerBtn = document.querySelector('.login-btn');
+        const registerBtn = document.querySelector('.glass-auth-btn');
         if (registerBtn) {
+            console.log('Register button found');
             registerBtn.addEventListener('click', register);
         }
         
         // Enter для регистрации
-        const inputs = document.querySelectorAll('input');
+        const inputs = document.querySelectorAll('.glass-input');
         inputs.forEach(input => {
             input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
