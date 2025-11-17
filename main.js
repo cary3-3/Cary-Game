@@ -8,6 +8,44 @@ let towerCurrentFloor = 1;
 let towerBetAmount = 0;
 let towerGameActive = false;
 
+// ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+function updateUserBalance(amount) {
+    if (!db.currentUser) return;
+    
+    console.log(`Updating balance: ${amount} ₽`);
+    const newBalance = db.updateUserBalance(db.currentUser.id, amount);
+    
+    if (newBalance !== null) {
+        updateUserInfo();
+        
+        // Анимация изменения баланса
+        const balanceElement = document.getElementById('balance');
+        if (balanceElement) {
+            balanceElement.style.color = amount > 0 ? '#00ff88' : '#ff4444';
+            balanceElement.style.transform = 'scale(1.1)';
+            
+            setTimeout(() => {
+                balanceElement.style.color = '';
+                balanceElement.style.transform = 'scale(1)';
+            }, 300);
+        }
+        
+        console.log(`Balance updated to: ${newBalance} ₽`);
+        return newBalance;
+    }
+    return null;
+}
+
+function updateUserInfo() {
+    if (db.currentUser) {
+        const usernameElement = document.getElementById('username');
+        const balanceElement = document.getElementById('balance');
+        
+        if (usernameElement) usernameElement.textContent = db.currentUser.username;
+        if (balanceElement) balanceElement.textContent = db.currentUser.balance + ' ₽';
+    }
+}
+
 // ========== ИНИЦИАЛИЗАЦИЯ ==========
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded - initializing games...');
@@ -22,12 +60,6 @@ function initializeAll() {
     setupTowerGame();
     setupTransactions();
     
-    // Проверяем авторизацию
-    if (!db.currentUser && !window.location.pathname.includes('login.html') && !window.location.pathname.includes('register.html')) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
     if (db.currentUser) {
         updateUserInfo();
         loadTransactionHistory();
@@ -39,32 +71,16 @@ function setupNavigation() {
     const navButtons = document.querySelectorAll('.glass-nav-btn');
     const gameSections = document.querySelectorAll('.glass-section');
 
-    console.log('Setting up navigation for', navButtons.length, 'buttons');
-
     navButtons.forEach(button => {
         button.addEventListener('click', function() {
-            console.log('Navigation button clicked:', this.getAttribute('data-game'));
             const game = this.getAttribute('data-game');
             
-            // Убираем активный класс у всех кнопок
-            navButtons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Добавляем активный класс текущей кнопке
+            navButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             
-            // Скрываем все секции
-            gameSections.forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Показываем нужную секцию
+            gameSections.forEach(section => section.classList.remove('active'));
             const targetSection = document.getElementById(game + '-game');
-            if (targetSection) {
-                targetSection.classList.add('active');
-                console.log('Showing section:', game);
-            }
+            if (targetSection) targetSection.classList.add('active');
         });
     });
 }
@@ -97,31 +113,19 @@ function createGlassParticles() {
 // ========== ИГРА КРАШ ==========
 function setupCrashGame() {
     const betButton = document.getElementById('place-bet');
-    
     if (betButton) {
-        console.log('Setting up Crash game...');
         betButton.addEventListener('click', handleCrashBet);
-    } else {
-        console.log('Crash button not found');
     }
 }
 
 function handleCrashBet() {
-    console.log('Crash bet button clicked');
-    
     if (crashGameActive) {
         cashOut();
         return;
     }
     
     const amountInput = document.getElementById('bet-amount');
-    if (!amountInput) {
-        alert('Поле ставки не найдено');
-        return;
-    }
-    
     const amount = parseInt(amountInput.value);
-    console.log('Bet amount:', amount);
     
     if (!amount || amount < 10) {
         alert('Минимальная ставка 10 ₽');
@@ -137,7 +141,6 @@ function handleCrashBet() {
 }
 
 function startCrashGame(betAmount) {
-    console.log('Starting crash game with bet:', betAmount);
     crashGameActive = true;
     currentMultiplier = 1.0;
     currentBetAmount = betAmount;
@@ -146,16 +149,10 @@ function startCrashGame(betAmount) {
     const multiplierDisplay = document.getElementById('current-multiplier');
     const rocketElement = document.getElementById('rocket-container');
     
-    if (!rocketElement) {
-        console.error('Rocket element not found!');
-        return;
-    }
-    
     betButton.textContent = '💰 Забрать';
     
-    // Вычитаем ставку из баланса
-    db.updateUserBalance(db.currentUser.id, -betAmount);
-    updateUserInfo();
+    // Списываем ставку сразу
+    updateUserBalance(-betAmount);
     
     // Сбрасываем позицию ракеты
     rocketElement.style.bottom = '40px';
@@ -164,11 +161,8 @@ function startCrashGame(betAmount) {
     crashInterval = setInterval(() => {
         if (!crashGameActive) return;
         
-        // Увеличиваем множитель
         currentMultiplier += 0.03;
-        if (multiplierDisplay) {
-            multiplierDisplay.textContent = currentMultiplier.toFixed(2) + 'x';
-        }
+        multiplierDisplay.textContent = currentMultiplier.toFixed(2) + 'x';
         
         // Поднимаем ракету
         const currentBottom = parseInt(rocketElement.style.bottom) || 40;
@@ -176,11 +170,9 @@ function startCrashGame(betAmount) {
         rocketElement.style.bottom = newBottom + 'px';
         
         // Меняем цвет
-        if (multiplierDisplay) {
-            if (currentMultiplier > 2) multiplierDisplay.style.color = '#ffaa00';
-            if (currentMultiplier > 3) multiplierDisplay.style.color = '#ff4444';
-            if (currentMultiplier > 5) multiplierDisplay.style.color = '#ff0066';
-        }
+        if (currentMultiplier > 2) multiplierDisplay.style.color = '#ffaa00';
+        if (currentMultiplier > 3) multiplierDisplay.style.color = '#ff4444';
+        if (currentMultiplier > 5) multiplierDisplay.style.color = '#ff0066';
         
         // Случайный краш
         const crashChance = Math.min(0.5, currentMultiplier * 0.02);
@@ -192,76 +184,54 @@ function startCrashGame(betAmount) {
 }
 
 function cashOut() {
-    console.log('Cashing out at multiplier:', currentMultiplier);
     if (crashGameActive && currentMultiplier > 1.0) {
         endCrashGame(true);
     }
 }
 
 function endCrashGame(isWin) {
-    console.log('Ending crash game, win:', isWin);
     clearInterval(crashInterval);
     crashGameActive = false;
     
     const betButton = document.getElementById('place-bet');
     const multiplierDisplay = document.getElementById('current-multiplier');
     
-    if (betButton) {
-        betButton.textContent = 'Сделать ставку';
-    }
+    betButton.textContent = 'Сделать ставку';
     
     if (isWin) {
         const winAmount = Math.floor(currentBetAmount * currentMultiplier);
-        db.updateUserBalance(db.currentUser.id, winAmount);
-        
+        updateUserBalance(winAmount);
         addToCrashHistory(currentMultiplier.toFixed(2) + 'x', true);
-        
-        if (multiplierDisplay) {
-            multiplierDisplay.style.color = '#00ff88';
-        }
+        multiplierDisplay.style.color = '#00ff88';
         
         setTimeout(() => {
             alert(`🎉 Вы выиграли ${winAmount} ₽ (${currentMultiplier.toFixed(2)}x)!`);
         }, 300);
     } else {
         addToCrashHistory(currentMultiplier.toFixed(2) + 'x', false);
-        
         const rocketElement = document.getElementById('rocket-container');
-        if (rocketElement) {
-            rocketElement.style.animation = 'glassShake 0.8s ease-in-out';
-        }
+        rocketElement.style.animation = 'glassShake 0.8s ease-in-out';
         
         setTimeout(() => {
             alert(`💥 Краш на ${currentMultiplier.toFixed(2)}x! Ставка проиграна.`);
-            if (rocketElement) {
-                rocketElement.style.animation = '';
-            }
+            rocketElement.style.animation = '';
         }, 300);
     }
     
-    updateUserInfo();
-    
     // Сброс игры
     setTimeout(() => {
-        if (multiplierDisplay) {
-            multiplierDisplay.textContent = '1.00x';
-            multiplierDisplay.style.color = '';
-        }
+        multiplierDisplay.textContent = '1.00x';
+        multiplierDisplay.style.color = '';
         const rocketElement = document.getElementById('rocket-container');
-        if (rocketElement) {
-            rocketElement.style.bottom = '40px';
-        }
+        rocketElement.style.bottom = '40px';
     }, 2000);
 }
 
 function addToCrashHistory(multiplier, isWin) {
     const historyContainer = document.querySelector('.glass-history');
-    if (!historyContainer) return;
-    
     const historyItem = document.createElement('div');
     historyItem.className = `glass-history-item ${isWin ? 'win' : ''}`;
     historyItem.textContent = multiplier;
-    
     historyContainer.insertBefore(historyItem, historyContainer.firstChild);
     
     if (historyContainer.children.length > 10) {
@@ -272,19 +242,13 @@ function addToCrashHistory(multiplier, isWin) {
 // ========== ИГРА СЛОТЫ ==========
 function setupSlotsGame() {
     const spinButton = document.getElementById('spin-btn');
-    
     if (spinButton) {
-        console.log('Setting up Slots game...');
         spinButton.addEventListener('click', handleSlotsSpin);
     }
 }
 
 function handleSlotsSpin() {
-    console.log('Slots spin button clicked');
-    
     const betInput = document.getElementById('slots-bet');
-    if (!betInput) return;
-    
     const betAmount = parseInt(betInput.value);
     
     if (!betAmount || betAmount < 10) {
@@ -312,39 +276,31 @@ function spinSlots(betAmount) {
     const spinButton = document.getElementById('spin-btn');
     const resultDisplay = document.getElementById('slots-result');
     
-    if (!spinButton || !resultDisplay) return;
-    
     spinButton.disabled = true;
     spinButton.innerHTML = '<div class="glass-loader"></div> Крутится...';
     
-    // Вычитаем ставку
-    db.updateUserBalance(db.currentUser.id, -betAmount);
-    updateUserInfo();
+    // Списываем ставку сразу
+    updateUserBalance(-betAmount);
     
     // Анимация вращения
-    reels.forEach(reel => {
-        if (reel) reel.classList.add('spinning');
-    });
+    reels.forEach(reel => reel.classList.add('spinning'));
     
-    // Определяем результат через 2 секунды
     setTimeout(() => {
         const symbols = ['🍒', '🍋', '🍊', '⭐', '7️⃣', '💎'];
         const results = [];
         
         reels.forEach((reel, index) => {
-            if (reel) {
-                reel.classList.remove('spinning');
-                const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-                reel.textContent = randomSymbol;
-                results[index] = randomSymbol;
-            }
+            reel.classList.remove('spinning');
+            const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+            reel.textContent = randomSymbol;
+            results[index] = randomSymbol;
         });
         
         // Проверяем выигрыш
         const winAmount = calculateSlotsWin(results, betAmount);
         
         if (winAmount > 0) {
-            db.updateUserBalance(db.currentUser.id, winAmount);
+            updateUserBalance(winAmount);
             resultDisplay.textContent = `🎉 Выигрыш ${winAmount} ₽!`;
             resultDisplay.style.color = '#00ff88';
         } else {
@@ -352,7 +308,6 @@ function spinSlots(betAmount) {
             resultDisplay.style.color = '#ff4444';
         }
         
-        updateUserInfo();
         spinButton.disabled = false;
         spinButton.textContent = '🎯 Крутить';
         
@@ -360,7 +315,6 @@ function spinSlots(betAmount) {
 }
 
 function calculateSlotsWin(results, betAmount) {
-    // Простая логика выигрыша
     const counts = {};
     results.forEach(symbol => {
         counts[symbol] = (counts[symbol] || 0) + 1;
@@ -368,9 +322,9 @@ function calculateSlotsWin(results, betAmount) {
     
     const maxCount = Math.max(...Object.values(counts));
     
-    if (maxCount === 5) return betAmount * 10; // 5 одинаковых
-    if (maxCount === 4) return betAmount * 5;  // 4 одинаковых  
-    if (maxCount === 3) return betAmount * 2;  // 3 одинаковых
+    if (maxCount === 5) return betAmount * 10;
+    if (maxCount === 4) return betAmount * 5;
+    if (maxCount === 3) return betAmount * 2;
     
     return 0;
 }
@@ -380,22 +334,13 @@ function setupTowerGame() {
     const climbButton = document.getElementById('climb-btn');
     const takeButton = document.getElementById('take-btn');
     
-    if (climbButton) {
-        console.log('Setting up Tower game...');
-        climbButton.addEventListener('click', handleTowerClimb);
-    }
-    
-    if (takeButton) {
-        takeButton.addEventListener('click', handleTowerTake);
-    }
+    if (climbButton) climbButton.addEventListener('click', handleTowerClimb);
+    if (takeButton) takeButton.addEventListener('click', handleTowerTake);
 }
 
 function handleTowerClimb() {
-    console.log('Tower climb button clicked');
-    
     if (towerGameActive) {
-        // Продолжаем игру
-        const success = Math.random() > 0.35; // 65% шанс успеха
+        const success = Math.random() > 0.35;
         
         if (success) {
             towerCurrentFloor++;
@@ -408,10 +353,7 @@ function handleTowerClimb() {
             endTowerGame(false);
         }
     } else {
-        // Начинаем новую игру
         const betInput = document.getElementById('tower-bet');
-        if (!betInput) return;
-        
         const betAmount = parseInt(betInput.value);
         
         if (!betAmount || betAmount < 10) {
@@ -428,8 +370,8 @@ function handleTowerClimb() {
         towerGameActive = true;
         towerCurrentFloor = 1;
         
-        db.updateUserBalance(db.currentUser.id, -betAmount);
-        updateUserInfo();
+        // Списываем ставку сразу
+        updateUserBalance(-betAmount);
         updateTowerFloors();
         
         document.getElementById('tower-result').textContent = 'Игра началась! Поднимайтесь выше!';
@@ -437,8 +379,6 @@ function handleTowerClimb() {
 }
 
 function handleTowerTake() {
-    console.log('Tower take button clicked');
-    
     if (towerGameActive && towerCurrentFloor > 1) {
         endTowerGame(true);
     }
@@ -469,20 +409,14 @@ function endTowerGame(isWin) {
     
     if (isWin) {
         const winAmount = towerBetAmount * towerCurrentFloor;
-        db.updateUserBalance(db.currentUser.id, winAmount);
-        
-        if (resultDisplay) {
-            resultDisplay.textContent = `🎉 Вы выиграли ${winAmount} ₽!`;
-            resultDisplay.style.color = '#00ff88';
-        }
+        updateUserBalance(winAmount);
+        resultDisplay.textContent = `🎉 Вы выиграли ${winAmount} ₽!`;
+        resultDisplay.style.color = '#00ff88';
     } else {
-        if (resultDisplay) {
-            resultDisplay.textContent = '💥 Башня рухнула!';
-            resultDisplay.style.color = '#ff4444';
-        }
+        resultDisplay.textContent = '💥 Башня рухнула!';
+        resultDisplay.style.color = '#ff4444';
     }
     
-    updateUserInfo();
     resetTower();
 }
 
@@ -491,15 +425,10 @@ function resetTower() {
     towerCurrentFloor = 1;
     
     const floors = document.querySelectorAll('.glass-floor');
-    floors.forEach(floor => {
-        floor.classList.remove('active', 'reached', 'failed');
-    });
+    floors.forEach(floor => floor.classList.remove('active', 'reached', 'failed'));
     
-    // Активируем первый этаж
     const firstFloor = document.querySelector('.glass-floor[data-floor="1"]');
-    if (firstFloor) {
-        firstFloor.classList.add('active');
-    }
+    if (firstFloor) firstFloor.classList.add('active');
 }
 
 // ========== ТРАНЗАКЦИИ ==========
@@ -507,23 +436,12 @@ function setupTransactions() {
     const depositBtn = document.getElementById('submit-deposit');
     const withdrawBtn = document.getElementById('submit-withdraw');
     
-    if (depositBtn) {
-        console.log('Setting up deposit button...');
-        depositBtn.addEventListener('click', handleDeposit);
-    }
-    
-    if (withdrawBtn) {
-        console.log('Setting up withdraw button...');
-        withdrawBtn.addEventListener('click', handleWithdraw);
-    }
+    if (depositBtn) depositBtn.addEventListener('click', handleDeposit);
+    if (withdrawBtn) withdrawBtn.addEventListener('click', handleWithdraw);
 }
 
 function handleDeposit() {
-    console.log('Deposit button clicked');
-    
     const amountInput = document.getElementById('deposit-amount');
-    if (!amountInput) return;
-    
     const amount = parseInt(amountInput.value);
     
     if (!amount || amount < 100) {
@@ -538,12 +456,8 @@ function handleDeposit() {
 }
 
 function handleWithdraw() {
-    console.log('Withdraw button clicked');
-    
     const amountInput = document.getElementById('withdraw-amount');
     const methodInput = document.getElementById('withdraw-method');
-    
-    if (!amountInput || !methodInput) return;
     
     const amount = parseInt(amountInput.value);
     const method = methodInput.value.trim();
@@ -568,17 +482,6 @@ function handleWithdraw() {
     amountInput.value = '';
     methodInput.value = '';
     loadTransactionHistory();
-}
-
-// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
-function updateUserInfo() {
-    if (db.currentUser) {
-        const usernameElement = document.getElementById('username');
-        const balanceElement = document.getElementById('balance');
-        
-        if (usernameElement) usernameElement.textContent = db.currentUser.username;
-        if (balanceElement) balanceElement.textContent = db.currentUser.balance + ' ₽';
-    }
 }
 
 function loadTransactionHistory() {
@@ -658,4 +561,4 @@ function getStatusText(status) {
 function logout() {
     db.logoutUser();
     window.location.href = 'login.html';
-}
+            }
