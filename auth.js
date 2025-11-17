@@ -10,6 +10,7 @@ function login() {
     const user = db.loginUser(username, password);
     
     if (user) {
+        alert('Вход успешен!');
         window.location.href = 'index.html';
     } else {
         alert('Неверное имя пользователя или пароль');
@@ -36,7 +37,7 @@ function register() {
         return;
     }
     
-    db.registerUser(username, password);
+    const user = db.registerUser(username, password);
     alert('Регистрация успешна! Теперь войдите в систему.');
     window.location.href = 'login.html';
 }
