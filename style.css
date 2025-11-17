@@ -11,12 +11,16 @@
     --accent-blue: rgba(100, 200, 255, 0.8);
     --accent-purple: rgba(200, 100, 255, 0.8);
     --accent-pink: rgba(255, 100, 200, 0.8);
+    --accent-green: rgba(100, 255, 200, 0.8);
+    --accent-orange: rgba(255, 150, 100, 0.8);
     --text-primary: rgba(255, 255, 255, 0.9);
     --text-secondary: rgba(255, 255, 255, 0.7);
+    --dark-bg: #0a0a0f;
+    --darker-bg: #050508;
 }
 
 body {
-    background: linear-gradient(135deg, #0f0f1f, #1a1a2e, #16213e);
+    background: linear-gradient(135deg, var(--dark-bg), var(--darker-bg));
     color: var(--text-primary);
     font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
     min-height: 100vh;
@@ -458,6 +462,13 @@ body {
     box-shadow: 0 12px 40px rgba(100, 200, 255, 0.4);
 }
 
+.glass-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 /* Стеклянная история */
 .glass-history {
     display: flex;
@@ -485,47 +496,6 @@ body {
     box-shadow: 0 4px 25px rgba(100, 200, 255, 0.2);
 }
 
-/* Стеклянный лоадер */
-.glass-loader {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--glass-border);
-    border-top: 2px solid var(--accent-blue);
-    border-radius: 50%;
-    animation: glassSpin 1s linear infinite;
-}
-
-@keyframes glassSpin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .container {
-        padding: 20px;
-    }
-    
-    .glass-header {
-        flex-direction: column;
-        gap: 20px;
-        text-align: center;
-    }
-    
-    .glass-nav {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-    
-    .glass-controls {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .glass-input-group {
-        flex-direction: column;
-    }
-    }
 /* Стили для слотов */
 .glass-reel {
     width: 90px;
@@ -547,9 +517,9 @@ body {
 }
 
 @keyframes reelSpin {
-    0% { transform: translateY(-10px) rotateX(0deg); }
-    50% { transform: translateY(0px) rotateX(180deg); }
-    100% { transform: translateY(10px) rotateX(360deg); }
+    0% { transform: translateY(-5px) rotateX(0deg); opacity: 0.7; }
+    50% { transform: translateY(0px) rotateX(180deg); opacity: 1; }
+    100% { transform: translateY(5px) rotateX(360deg); opacity: 0.7; }
 }
 
 /* Стили для башни */
@@ -612,20 +582,136 @@ body {
     animation: glassShake 0.5s ease-in-out;
 }
 
-@keyframes glassShake {
-    0%, 100% { transform: translateX(0) scale(1.05); }
-    25% { transform: translateX(-10px) scale(1.05); }
-    50% { transform: translateX(10px) scale(1.05); }
-    75% { transform: translateX(-10px) scale(1.05); }
+/* Стили для страниц аутентификации */
+.glass-auth-container {
+    max-width: 450px;
+    margin: 80px auto;
+    padding: 50px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    box-shadow: 0 20px 60px var(--glass-shadow);
 }
 
-/* Дополнительные цветовые переменные */
-:root {
-    --accent-green: rgba(100, 255, 200, 0.8);
-    --accent-orange: rgba(255, 150, 100, 0.8);
+.glass-auth-header {
+    text-align: center;
+    margin-bottom: 40px;
 }
 
-/* Стили для истории транзакций */
+.glass-auth-subtitle {
+    color: var(--text-secondary);
+    margin-top: 10px;
+    font-size: 1.1em;
+}
+
+.glass-auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.glass-auth-btn {
+    padding: 18px 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    color: var(--text-primary);
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-auth-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.glass-auth-btn:hover::before {
+    left: 100%;
+}
+
+.glass-auth-btn:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 10px 35px rgba(100, 200, 255, 0.25);
+}
+
+.glass-auth-btn.primary {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    border-color: transparent;
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.glass-auth-btn.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(100, 200, 255, 0.4);
+}
+
+.btn-icon {
+    font-size: 1.2em;
+}
+
+.glass-auth-links {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.glass-auth-link {
+    color: var(--accent-blue);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.glass-auth-link:hover {
+    color: var(--accent-purple);
+}
+
+.glass-auth-link.admin {
+    color: var(--accent-pink);
+}
+
+.glass-auth-bonus {
+    color: var(--accent-green);
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+/* Стили для админ панели */
+.admin-panel {
+    background: linear-gradient(135deg, var(--glass-bg), rgba(255, 0, 102, 0.05));
+    border: 1px solid rgba(255, 0, 102, 0.3);
+    border-radius: 25px;
+    padding: 40px;
+    margin-top: 30px;
+    box-shadow: 0 20px 50px rgba(255, 0, 102, 0.1);
+}
+
+.admin-section {
+    margin-bottom: 40px;
+}
+
+.admin-section h3 {
+    color: var(--accent-pink);
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+}
+
 .glass-transaction-item {
     padding: 20px;
     background: var(--glass-bg);
@@ -634,25 +720,174 @@ body {
     border-radius: 15px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 20px var(--glass-shadow);
+    margin-bottom: 15px;
 }
 
 .glass-transaction-item:hover {
+    border-color: rgba(255, 255, 255, 0.3);
     transform: translateX(10px);
-    border-color: var(--accent-blue);
-}
-.glass-reel.spinning {
-    animation: reelSpin 0.1s infinite;
 }
 
-@keyframes reelSpin {
-    0% { transform: translateY(-5px) rotateX(0deg); opacity: 0.7; }
-    50% { transform: translateY(0px) rotateX(180deg); opacity: 1; }
-    100% { transform: translateY(5px) rotateX(360deg); opacity: 0.7; }
+/* Стили для админ кнопок */
+.glass-admin-btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+    margin-left: 8px;
 }
 
+.glass-admin-btn.approve {
+    background: linear-gradient(135deg, #00ff88, #00cc66);
+    color: #000;
+}
+
+.glass-admin-btn.approve:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+}
+
+.glass-admin-btn.reject {
+    background: linear-gradient(135deg, #ff4444, #cc0000);
+    color: #fff;
+}
+
+.glass-admin-btn.reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+}
+
+.glass-admin-btn.balance {
+    background: linear-gradient(135deg, #ffaa00, #ff8800);
+    color: #000;
+}
+
+.glass-admin-btn.balance:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 170, 0, 0.3);
+}
+
+.glass-admin-btn.reset {
+    background: linear-gradient(135deg, #666, #444);
+    color: #fff;
+}
+
+.glass-admin-btn.reset:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 102, 102, 0.3);
+}
+
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Стеклянный лоадер */
+.glass-loader {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--glass-border);
+    border-top: 2px solid var(--accent-blue);
+    border-radius: 50%;
+    animation: glassSpin 1s linear infinite;
+}
+
+@keyframes glassSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Анимация тряски */
 @keyframes glassShake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-8px); }
     50% { transform: translateX(8px); }
     75% { transform: translateX(-8px); }
 }
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .glass-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .glass-nav {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .glass-controls {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .glass-input-group {
+        flex-direction: column;
+    }
+    
+    .glass-game-container {
+        padding: 30px 20px;
+    }
+    
+    .glass-crash-graph {
+        height: 400px;
+    }
+    
+    .glass-multiplier {
+        font-size: 3em;
+        padding: 20px 40px;
+    }
+    
+    .glass-auth-container {
+        margin: 40px auto;
+        padding: 30px 20px;
+    }
+    
+    .admin-actions {
+        flex-direction: column;
+    }
+    
+    .glass-admin-btn {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .glass-logo {
+        font-size: 2em;
+    }
+    
+    .glass-nav-btn {
+        padding: 20px 15px;
+        font-size: 1em;
+    }
+    
+    .glass-user-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .glass-reel {
+        width: 60px;
+        height: 60px;
+        font-size: 2em;
+    }
+    
+    .glass-floor {
+        width: 200px;
+        padding: 20px;
+    }
+    }
