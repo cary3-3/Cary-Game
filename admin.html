@@ -7,35 +7,50 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="glass-background"></div>
+    
     <div class="container">
-        <header>
-            <h1 class="neon-text">CARY GAME - АДМИН ПАНЕЛЬ</h1>
-            <div class="user-panel">
-                <button onclick="adminLogout()">Выйти</button>
+        <header class="glass-header">
+            <h1 class="glass-logo">CARY GAME - АДМИН ПАНЕЛЬ</h1>
+            <div class="glass-user-panel">
+                <button class="glass-logout-btn" onclick="adminLogout()">Выйти</button>
             </div>
         </header>
 
         <div class="admin-login" id="admin-login">
-            <div class="login-container">
-                <h3>Вход в админ панель</h3>
-                <input type="password" id="admin-password" placeholder="Пароль администратора">
-                <button class="login-btn">Войти</button>
+            <div class="glass-game-container" style="max-width: 400px; margin: 100px auto;">
+                <h2 style="text-align: center; margin-bottom: 30px;">🔐 АДМИН ПАНЕЛЬ</h2>
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <input type="password" id="admin-password" class="glass-input" placeholder="Пароль администратора">
+                    <button class="glass-btn primary">Войти</button>
+                </div>
             </div>
         </div>
 
         <div class="admin-panel" id="admin-panel" style="display: none;">
-            <div class="admin-section">
-                <h3>Заявки на пополнение</h3>
+            <!-- Статистика -->
+            <div class="glass-game-container" style="margin-bottom: 30px;">
+                <h3>📊 Статистика системы</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="glass-user-badge">👥 Пользователей: <span id="users-count">0</span></div>
+                    <div class="glass-user-badge">💎 Пополнений: <span id="deposits-count">0</span></div>
+                    <div class="glass-user-badge">💳 Выводов: <span id="withdraws-count">0</span></div>
+                    <div class="glass-user-badge">💰 Общий баланс: <span id="total-balance">0</span> ₽</div>
+                </div>
+            </div>
+
+            <div class="glass-game-container">
+                <h3>⏳ Заявки на пополнение</h3>
                 <div id="deposit-requests"></div>
             </div>
             
-            <div class="admin-section">
-                <h3>Заявки на вывод</h3>
+            <div class="glass-game-container">
+                <h3>⏳ Заявки на вывод</h3>
                 <div id="withdraw-requests"></div>
             </div>
             
-            <div class="admin-section">
-                <h3>Пользователи</h3>
+            <div class="glass-game-container">
+                <h3>👥 Все пользователи</h3>
                 <div id="users-list"></div>
             </div>
         </div>
