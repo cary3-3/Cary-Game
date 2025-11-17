@@ -22,8 +22,8 @@ class Database {
         const user = {
             id: Date.now().toString(),
             username,
-            password: btoa(password), // Простое кодирование
-            balance: 1000, // Стартовый баланс
+            password: btoa(password),
+            balance: 1000,
             createdAt: new Date().toISOString()
         };
         this.users.push(user);
@@ -84,6 +84,12 @@ class Database {
                     user.balance += transaction.amount;
                 }
             }
+            if (status === 'approved' && transaction.type === 'withdraw') {
+                const user = this.users.find(u => u.id === transaction.userId);
+                if (user) {
+                    user.balance -= transaction.amount;
+                }
+            }
             this.saveTransactions();
             this.saveUsers();
         }
@@ -107,31 +113,7 @@ class Database {
 // Глобальная переменная для доступа к базе данных
 const db = new Database();
 
-// Инициализация при загрузке
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.location.pathname.includes('admin.html')) {
-        initializeAdmin();
-    } else if (window.location.pathname.includes('login.html')) {
-        initializeLogin();
-    } else if (window.location.pathname.includes('register.html')) {
-        initializeRegister();
-    } else {
-        initializeMain();
-    }
-});
-
-function initializeMain() {
-    if (!db.currentUser) {
-        window.location.href = 'login.html';
-        return;
-    }
-
-    updateUserInfo();
-    setupNavigation();
-    setupGames();
-    loadTransactionHistory();
-}
-
+// Основные функции
 function updateUserInfo() {
     if (document.getElementById('username') && document.getElementById('balance')) {
         document.getElementById('username').textContent = db.currentUser.username;
@@ -147,11 +129,9 @@ function setupNavigation() {
         button.addEventListener('click', function() {
             const game = this.getAttribute('data-game');
             
-            // Обновляем активные кнопки
             navButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             
-            // Показываем соответствующую секцию
             gameSections.forEach(section => section.classList.remove('active'));
             const targetSection = document.getElementById(`${game}-game`);
             if (targetSection) {
@@ -213,15 +193,22 @@ function getStatusText(status) {
     return statusMap[status] || status;
 }
 
-// Функции для инициализации страниц
-function initializeLogin() {
-    // Уже обрабатывается в auth.js
-}
-
-function initializeRegister() {
-    // Уже обрабатывается в auth.js
-}
-
-function initializeAdmin() {
-    // Уже обрабатывается в admin.js
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.pathname.includes('admin.html')) {
+        // Админ панель инициализируется в admin.js
+    } else if (window.location.pathname.includes('login.html')) {
+        // Логин инициализируется в auth.js
+    } else if (window.location.pathname.includes('register.html')) {
+        // Регистрация инициализируется в auth.js
+    } else {
+        // Главная страница
+        if (!db.currentUser) {
+            window.location.href = 'login.html';
+            return;
         }
+        updateUserInfo();
+        setupNavigation();
+        loadTransactionHistory();
+    }
+});
