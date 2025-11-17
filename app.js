@@ -104,6 +104,7 @@ class Database {
     }
 }
 
+// Глобальная переменная для доступа к базе данных
 const db = new Database();
 
 // Инициализация при загрузке
@@ -132,8 +133,10 @@ function initializeMain() {
 }
 
 function updateUserInfo() {
-    document.getElementById('username').textContent = db.currentUser.username;
-    document.getElementById('balance').textContent = db.currentUser.balance + ' ₽';
+    if (document.getElementById('username') && document.getElementById('balance')) {
+        document.getElementById('username').textContent = db.currentUser.username;
+        document.getElementById('balance').textContent = db.currentUser.balance + ' ₽';
+    }
 }
 
 function setupNavigation() {
@@ -150,7 +153,10 @@ function setupNavigation() {
             
             // Показываем соответствующую секцию
             gameSections.forEach(section => section.classList.remove('active'));
-            document.getElementById(`${game}-game`).classList.add('active');
+            const targetSection = document.getElementById(`${game}-game`);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
         });
     });
 }
@@ -161,36 +167,41 @@ function logout() {
 }
 
 function loadTransactionHistory() {
+    if (!db.currentUser) return;
+    
     const userTransactions = db.getUserTransactions(db.currentUser.id);
     
     const depositList = document.getElementById('deposit-list');
     const withdrawList = document.getElementById('withdraw-list');
     
-    depositList.innerHTML = '';
-    withdrawList.innerHTML = '';
+    if (depositList) {
+        depositList.innerHTML = '';
+        userTransactions.filter(t => t.type === 'deposit').forEach(transaction => {
+            const item = document.createElement('div');
+            item.className = 'deposit-item';
+            item.innerHTML = `
+                <div>Сумма: ${transaction.amount} ₽</div>
+                <div>Статус: ${getStatusText(transaction.status)}</div>
+                <div>Дата: ${new Date(transaction.createdAt).toLocaleDateString()}</div>
+            `;
+            depositList.appendChild(item);
+        });
+    }
     
-    userTransactions.filter(t => t.type === 'deposit').forEach(transaction => {
-        const item = document.createElement('div');
-        item.className = 'deposit-item';
-        item.innerHTML = `
-            <div>Сумма: ${transaction.amount} ₽</div>
-            <div>Статус: ${getStatusText(transaction.status)}</div>
-            <div>Дата: ${new Date(transaction.createdAt).toLocaleDateString()}</div>
-        `;
-        depositList.appendChild(item);
-    });
-    
-    userTransactions.filter(t => t.type === 'withdraw').forEach(transaction => {
-        const item = document.createElement('div');
-        item.className = 'withdraw-item';
-        item.innerHTML = `
-            <div>Сумма: ${transaction.amount} ₽</div>
-            <div>Метод: ${transaction.method}</div>
-            <div>Статус: ${getStatusText(transaction.status)}</div>
-            <div>Дата: ${new Date(transaction.createdAt).toLocaleDateString()}</div>
-        `;
-        withdrawList.appendChild(item);
-    });
+    if (withdrawList) {
+        withdrawList.innerHTML = '';
+        userTransactions.filter(t => t.type === 'withdraw').forEach(transaction => {
+            const item = document.createElement('div');
+            item.className = 'withdraw-item';
+            item.innerHTML = `
+                <div>Сумма: ${transaction.amount} ₽</div>
+                <div>Метод: ${transaction.method}</div>
+                <div>Статус: ${getStatusText(transaction.status)}</div>
+                <div>Дата: ${new Date(transaction.createdAt).toLocaleDateString()}</div>
+            `;
+            withdrawList.appendChild(item);
+        });
+    }
 }
 
 function getStatusText(status) {
@@ -201,3 +212,16 @@ function getStatusText(status) {
     };
     return statusMap[status] || status;
 }
+
+// Функции для инициализации страниц
+function initializeLogin() {
+    // Уже обрабатывается в auth.js
+}
+
+function initializeRegister() {
+    // Уже обрабатывается в auth.js
+}
+
+function initializeAdmin() {
+    // Уже обрабатывается в admin.js
+        }
