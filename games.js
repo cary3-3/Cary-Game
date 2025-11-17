@@ -214,3 +214,32 @@ function submitWithdraw() {
     document.getElementById('withdraw-method').value = '';
     loadTransactionHistory();
         }
+// Создание стеклянных частиц на фоне
+function createGlassParticles() {
+    const container = document.createElement('div');
+    container.className = 'glass-particles';
+    document.body.appendChild(container);
+
+    for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'glass-particle';
+        
+        const size = Math.random() * 100 + 50;
+        const left = Math.random() * 100;
+        const animationDelay = Math.random() * 20;
+        const animationDuration = 15 + Math.random() * 15;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${left}%`;
+        particle.style.animationDelay = `${animationDelay}s`;
+        particle.style.animationDuration = `${animationDuration}s`;
+        
+        container.appendChild(particle);
+    }
+}
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    createGlassParticles();
+});
