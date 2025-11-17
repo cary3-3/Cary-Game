@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cary Game - Главная</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -33,17 +33,56 @@
                         <div class="multiplier-display">
                             <span id="current-multiplier">1.00x</span>
                         </div>
-                        <canvas id="crash-canvas"></canvas>
                     </div>
                     <div class="bet-controls">
                         <input type="number" id="bet-amount" placeholder="Сумма ставки" min="10">
                         <button id="place-bet" class="bet-btn">Сделать ставку</button>
                     </div>
+                    <div class="game-info">Ракета взлетает - множитель растет. Успей забрать до краша!</div>
                     <div class="crash-history">
-                        <div class="history-item">2.34x</div>
-                        <div class="history-item">1.87x</div>
-                        <div class="history-item">3.45x</div>
+                        <div class="history-item win">2.34x</div>
+                        <div class="history-item">1.15x</div>
+                        <div class="history-item win">3.45x</div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Игра Слоты -->
+            <div id="slots-game" class="game-section">
+                <div class="slots-container">
+                    <h3>СЛОТ-МАШИНА</h3>
+                    <div class="slots-machine">
+                        <div class="reel" id="reel1">🍒</div>
+                        <div class="reel" id="reel2">🍋</div>
+                        <div class="reel" id="reel3">🍊</div>
+                        <div class="reel" id="reel4">⭐</div>
+                        <div class="reel" id="reel5">7️⃣</div>
+                    </div>
+                    <div class="slots-controls">
+                        <input type="number" id="slots-bet" placeholder="Ставка" min="10" value="50">
+                        <button id="spin-btn" class="bet-btn">Крутить</button>
+                    </div>
+                    <div class="slots-info" id="slots-result"></div>
+                </div>
+            </div>
+
+            <!-- Игра Башня -->
+            <div id="tower-game" class="game-section">
+                <div class="tower-container">
+                    <h3>БАШНЯ</h3>
+                    <div class="tower">
+                        <div class="floor" data-floor="10">10x</div>
+                        <div class="floor" data-floor="5">5x</div>
+                        <div class="floor" data-floor="3">3x</div>
+                        <div class="floor" data-floor="2">2x</div>
+                        <div class="floor active" data-floor="1">1x</div>
+                    </div>
+                    <div class="tower-controls">
+                        <input type="number" id="tower-bet" placeholder="Ставка" min="10" value="100">
+                        <button id="climb-btn" class="bet-btn">Подниматься</button>
+                        <button id="take-btn" class="action-btn">Забрать</button>
+                    </div>
+                    <div class="tower-info" id="tower-result"></div>
                 </div>
             </div>
 
@@ -65,7 +104,7 @@
                 <div class="withdraw-container">
                     <h3>Вывод средств</h3>
                     <input type="number" id="withdraw-amount" placeholder="Сумма вывода" min="500">
-                    <input type="text" id="withdraw-method" placeholder="Реквизиты">
+                    <input type="text" id="withdraw-method" placeholder="Реквизиты (карта/кошелек)">
                     <button id="submit-withdraw" class="action-btn">Отправить заявку</button>
                     <div class="withdraw-history">
                         <h4>История заявок</h4>
@@ -76,7 +115,7 @@
         </main>
     </div>
 
-    <script src="js/app.js"></script>
-    <script src="js/games.js"></script>
+    <script src="app.js"></script>
+    <script src="games.js"></script>
 </body>
 </html>
