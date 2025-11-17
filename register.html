@@ -7,16 +7,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="login-container">
-        <h2 class="neon-text" style="text-align: center; margin-bottom: 30px;">РЕГИСТРАЦИЯ</h2>
-        <div class="login-form">
-            <input type="text" id="username" placeholder="Имя пользователя">
-            <input type="password" id="password" placeholder="Пароль">
-            <input type="password" id="confirmPassword" placeholder="Подтвердите пароль">
-            <button class="login-btn">Зарегистрироваться</button>
-            <p style="text-align: center; margin-top: 20px;">
-                Уже есть аккаунт? <a href="login.html" style="color: #00ffff;">Войти</a>
-            </p>
+    <div class="glass-background"></div>
+    
+    <div class="container">
+        <div class="glass-auth-container">
+            <div class="glass-auth-header">
+                <h1 class="glass-logo">CARY GAME</h1>
+                <p class="glass-auth-subtitle">Создайте свой игровой аккаунт</p>
+            </div>
+            
+            <div class="glass-auth-form">
+                <div class="glass-input-group">
+                    <input type="text" id="username" class="glass-input" placeholder="👤 Придумайте имя пользователя" required>
+                </div>
+                
+                <div class="glass-input-group">
+                    <input type="password" id="password" class="glass-input" placeholder="🔒 Придумайте пароль" required>
+                </div>
+                
+                <div class="glass-input-group">
+                    <input type="password" id="confirmPassword" class="glass-input" placeholder="🔒 Повторите пароль" required>
+                </div>
+                
+                <button class="glass-auth-btn primary">
+                    <span class="btn-icon">🚀</span>
+                    Создать аккаунт
+                </button>
+                
+                <div class="glass-auth-links">
+                    <p>Уже есть аккаунт? <a href="login.html" class="glass-auth-link">Войти сейчас</a></p>
+                    <p class="glass-auth-bonus">🎁 Бонус при регистрации: 5,000 ₽</p>
+                </div>
+            </div>
         </div>
     </div>
 
