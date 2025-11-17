@@ -3,112 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cary Game - Главная</title>
+    <title>Cary Game - Premium Casino</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="glass-background"></div>
+    
     <div class="container">
-        <header>
-            <h1 class="neon-text">CARY GAME</h1>
-            <div class="user-panel">
-                <span id="username">Гость</span>
-                <span id="balance">0 ₽</span>
-                <button onclick="logout()">Выйти</button>
+        <!-- Стеклянный хедер -->
+        <header class="glass-header">
+            <div class="glass-logo">CARY GAME</div>
+            <div class="glass-user-panel">
+                <div class="glass-user-info">
+                    <div class="glass-user-badge" id="username">Гость</div>
+                    <div class="glass-user-badge" id="balance">0 ₽</div>
+                </div>
+                <button class="glass-logout-btn" onclick="logout()">Выйти</button>
             </div>
         </header>
 
-        <nav class="games-nav">
-            <button class="nav-btn active" data-game="crash">Краш</button>
-            <button class="nav-btn" data-game="slots">Слоты</button>
-            <button class="nav-btn" data-game="tower">Башня</button>
-            <button class="nav-btn" data-game="deposit">Пополнить</button>
-            <button class="nav-btn" data-game="withdraw">Вывести</button>
+        <!-- Стеклянная навигация -->
+        <nav class="glass-nav">
+            <button class="glass-nav-btn active" data-game="crash">🚀 Краш</button>
+            <button class="glass-nav-btn" data-game="slots">🎰 Слоты</button>
+            <button class="glass-nav-btn" data-game="tower">🏰 Башня</button>
+            <button class="glass-nav-btn" data-game="deposit">💎 Пополнить</button>
+            <button class="glass-nav-btn" data-game="withdraw">💳 Вывести</button>
         </nav>
 
         <main>
             <!-- Игра Краш -->
-            <div id="crash-game" class="game-section active">
-                <div class="crash-container">
-                    <div class="crash-graph">
-                        <div class="multiplier-display">
+            <div id="crash-game" class="glass-section active">
+                <div class="glass-game-container">
+                    <div class="glass-crash-graph">
+                        <div class="glass-multiplier">
                             <span id="current-multiplier">1.00x</span>
                         </div>
+                        <div class="glass-rocket-container" id="rocket-container">
+                            <div class="glass-rocket">
+                                <div class="glass-rocket-body">
+                                    <div class="glass-rocket-window"></div>
+                                </div>
+                                <div class="glass-rocket-fire"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bet-controls">
-                        <input type="number" id="bet-amount" placeholder="Сумма ставки" min="10">
-                        <button id="place-bet" class="bet-btn">Сделать ставку</button>
+                    
+                    <div class="glass-controls">
+                        <div class="glass-input-group">
+                            <input type="number" id="bet-amount" class="glass-input" placeholder="Сумма ставки" min="10" value="100">
+                            <button id="place-bet" class="glass-btn primary">Сделать ставку</button>
+                        </div>
                     </div>
-                    <div class="game-info">Ракета взлетает - множитель растет. Успей забрать до краша!</div>
-                    <div class="crash-history">
-                        <div class="history-item win">2.34x</div>
-                        <div class="history-item">1.15x</div>
-                        <div class="history-item win">3.45x</div>
+
+                    <div style="text-align: center; margin-top: 20px; color: var(--text-secondary);">
+                        Ракета взлетает - множитель растет. Успей забрать до краша!
+                    </div>
+
+                    <div class="glass-history">
+                        <div class="glass-history-item win">2.34x</div>
+                        <div class="glass-history-item">1.15x</div>
+                        <div class="glass-history-item win">3.45x</div>
+                        <div class="glass-history-item win">1.87x</div>
+                        <div class="glass-history-item">1.05x</div>
                     </div>
                 </div>
             </div>
 
             <!-- Игра Слоты -->
-            <div id="slots-game" class="game-section">
-                <div class="slots-container">
-                    <h3>СЛОТ-МАШИНА</h3>
-                    <div class="slots-machine">
-                        <div class="reel" id="reel1">🍒</div>
-                        <div class="reel" id="reel2">🍋</div>
-                        <div class="reel" id="reel3">🍊</div>
-                        <div class="reel" id="reel4">⭐</div>
-                        <div class="reel" id="reel5">7️⃣</div>
+            <div id="slots-game" class="glass-section">
+                <div class="glass-game-container">
+                    <h2 style="text-align: center; margin-bottom: 40px; font-size: 2.5em; background: linear-gradient(135deg, var(--accent-blue), var(--accent-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🎰 СЛОТ-МАШИНА</h2>
+                    
+                    <div style="display: flex; justify-content: center; gap: 15px; margin: 40px 0; padding: 30px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px;">
+                        <div class="glass-reel" id="reel1">🍒</div>
+                        <div class="glass-reel" id="reel2">🍋</div>
+                        <div class="glass-reel" id="reel3">🍊</div>
+                        <div class="glass-reel" id="reel4">⭐</div>
+                        <div class="glass-reel" id="reel5">7️⃣</div>
                     </div>
-                    <div class="slots-controls">
-                        <input type="number" id="slots-bet" placeholder="Ставка" min="10" value="50">
-                        <button id="spin-btn" class="bet-btn">Крутить</button>
+                    
+                    <div class="glass-controls">
+                        <div class="glass-input-group">
+                            <input type="number" id="slots-bet" class="glass-input" placeholder="Ставка" min="10" value="50">
+                            <button id="spin-btn" class="glass-btn primary">🎯 Крутить</button>
+                        </div>
                     </div>
-                    <div class="slots-info" id="slots-result"></div>
+                    
+                    <div id="slots-result" style="text-align: center; margin-top: 25px; font-size: 1.2em; color: var(--accent-blue);"></div>
                 </div>
             </div>
 
             <!-- Игра Башня -->
-            <div id="tower-game" class="game-section">
-                <div class="tower-container">
-                    <h3>БАШНЯ</h3>
-                    <div class="tower">
-                        <div class="floor" data-floor="10">10x</div>
-                        <div class="floor" data-floor="5">5x</div>
-                        <div class="floor" data-floor="3">3x</div>
-                        <div class="floor" data-floor="2">2x</div>
-                        <div class="floor active" data-floor="1">1x</div>
+            <div id="tower-game" class="glass-section">
+                <div class="glass-game-container">
+                    <h2 style="text-align: center; margin-bottom: 40px; font-size: 2.5em; background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🏰 БАШНЯ</h2>
+                    
+                    <div class="glass-tower">
+                        <div class="glass-floor" data-floor="10">
+                            <span>10x</span>
+                            <div class="glass-floor-glow"></div>
+                        </div>
+                        <div class="glass-floor" data-floor="5">
+                            <span>5x</span>
+                            <div class="glass-floor-glow"></div>
+                        </div>
+                        <div class="glass-floor" data-floor="3">
+                            <span>3x</span>
+                            <div class="glass-floor-glow"></div>
+                        </div>
+                        <div class="glass-floor" data-floor="2">
+                            <span>2x</span>
+                            <div class="glass-floor-glow"></div>
+                        </div>
+                        <div class="glass-floor active" data-floor="1">
+                            <span>1x</span>
+                            <div class="glass-floor-glow"></div>
+                        </div>
                     </div>
-                    <div class="tower-controls">
-                        <input type="number" id="tower-bet" placeholder="Ставка" min="10" value="100">
-                        <button id="climb-btn" class="bet-btn">Подниматься</button>
-                        <button id="take-btn" class="action-btn">Забрать</button>
+                    
+                    <div class="glass-controls">
+                        <div class="glass-input-group">
+                            <input type="number" id="tower-bet" class="glass-input" placeholder="Ставка" min="10" value="100">
+                            <button id="climb-btn" class="glass-btn primary">⬆️ Подниматься</button>
+                            <button id="take-btn" class="glass-btn">💰 Забрать</button>
+                        </div>
                     </div>
-                    <div class="tower-info" id="tower-result"></div>
+                    
+                    <div id="tower-result" style="text-align: center; margin-top: 25px; font-size: 1.2em; color: var(--accent-purple);"></div>
                 </div>
             </div>
 
             <!-- Пополнение баланса -->
-            <div id="deposit-game" class="game-section">
-                <div class="deposit-container">
-                    <h3>Пополнение баланса</h3>
-                    <input type="number" id="deposit-amount" placeholder="Сумма пополнения" min="100">
-                    <button id="submit-deposit" class="action-btn">Отправить заявку</button>
-                    <div class="deposit-history">
-                        <h4>История заявок</h4>
-                        <div id="deposit-list"></div>
+            <div id="deposit-game" class="glass-section">
+                <div class="glass-game-container">
+                    <h2 style="text-align: center; margin-bottom: 40px; font-size: 2.5em; background: linear-gradient(135deg, var(--accent-blue), var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">💎 ПОПОЛНЕНИЕ</h2>
+                    
+                    <div style="max-width: 500px; margin: 0 auto;">
+                        <div class="glass-input-group" style="flex-direction: column; gap: 20px;">
+                            <input type="number" id="deposit-amount" class="glass-input" placeholder="Сумма пополнения (мин. 100 ₽)" min="100">
+                            <button id="submit-deposit" class="glass-btn primary">📨 Отправить заявку</button>
+                        </div>
+                        
+                        <div style="margin-top: 40px;">
+                            <h3 style="margin-bottom: 20px; color: var(--text-primary);">📋 История заявок</h3>
+                            <div id="deposit-list" style="display: flex; flex-direction: column; gap: 15px;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Вывод средств -->
-            <div id="withdraw-game" class="game-section">
-                <div class="withdraw-container">
-                    <h3>Вывод средств</h3>
-                    <input type="number" id="withdraw-amount" placeholder="Сумма вывода" min="500">
-                    <input type="text" id="withdraw-method" placeholder="Реквизиты (карта/кошелек)">
-                    <button id="submit-withdraw" class="action-btn">Отправить заявку</button>
-                    <div class="withdraw-history">
-                        <h4>История заявок</h4>
-                        <div id="withdraw-list"></div>
+            <div id="withdraw-game" class="glass-section">
+                <div class="glass-game-container">
+                    <h2 style="text-align: center; margin-bottom: 40px; font-size: 2.5em; background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">💳 ВЫВОД СРЕДСТВ</h2>
+                    
+                    <div style="max-width: 500px; margin: 0 auto;">
+                        <div class="glass-input-group" style="flex-direction: column; gap: 20px;">
+                            <input type="number" id="withdraw-amount" class="glass-input" placeholder="Сумма вывода (мин. 500 ₽)" min="500">
+                            <input type="text" id="withdraw-method" class="glass-input" placeholder="Реквизиты (карта/кошелек)">
+                            <button id="submit-withdraw" class="glass-btn primary">📨 Отправить заявку</button>
+                        </div>
+                        
+                        <div style="margin-top: 40px;">
+                            <h3 style="margin-bottom: 20px; color: var(--text-primary);">📋 История заявок</h3>
+                            <div id="withdraw-list" style="display: flex; flex-direction: column; gap: 15px;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
