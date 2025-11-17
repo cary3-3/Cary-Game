@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Миграция данных</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        textarea { width: 100%; height: 200px; margin: 10px 0; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Экспорт/Импорт данных</h2>
+    
+    <div>
+        <h3>Экспорт данных</h3>
+        <button onclick="exportData()">Экспортировать все данные</button>
+        <textarea id="exportData" readonly></textarea>
+    </div>
+    
+    <div>
+        <h3>Импорт данных</h3>
+        <textarea id="importData" placeholder="Вставьте данные для импорта..."></textarea>
+        <button onclick="importData()">Импортировать данные</button>
+    </div>
+
+    <script>
+        function exportData() {
+            const users = JSON.parse(localStorage.getItem('carygame_users') || '[]');
+            const transactions = JSON.parse(localStorage.getItem('carygame_transactions') || '[]');
+            
+            const data = {
+                users: users,
+                transactions: transactions,
+                exportDate: new Date().toISOString()
+            };
+            
+            document.getElementById('exportData').value = JSON.stringify(data, null, 2);
+        }
+        
+        function importData() {
+            const importText = document.getElementById('importData').value;
+            try {
+                const data = JSON.parse(importText);
+                
+                if (data.users) localStorage.setItem('carygame_users', JSON.stringify(data.users));
+                if (data.transactions) localStorage.setItem('carygame_transactions', JSON.stringify(data.transactions));
+                
+                alert('Данные успешно импортированы!');
+                location.reload();
+            } catch (e) {
+                alert('Ошибка импорта: ' + e.message);
+            }
+        }
+        
+        // Автоматически показываем текущие данные
+        exportData();
+    </script>
+</body>
+</html>
