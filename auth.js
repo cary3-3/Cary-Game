@@ -40,3 +40,40 @@ function register() {
     alert('Регистрация успешна! Теперь войдите в систему.');
     window.location.href = 'login.html';
 }
+
+// Обработчики для страниц входа и регистрации
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.pathname.includes('login.html')) {
+        const loginBtn = document.querySelector('.login-btn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', login);
+        }
+        
+        // Enter для входа
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+        });
+    }
+    
+    if (window.location.pathname.includes('register.html')) {
+        const registerBtn = document.querySelector('.login-btn');
+        if (registerBtn) {
+            registerBtn.addEventListener('click', register);
+        }
+        
+        // Enter для регистрации
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    register();
+                }
+            });
+        });
+    }
+});
